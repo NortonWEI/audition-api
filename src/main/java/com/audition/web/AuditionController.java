@@ -41,7 +41,8 @@ public class AuditionController {
         try {
             userIdInt = Integer.parseInt(userId);
         } catch (NumberFormatException e) {
-            throw new SystemException("Invalid userId parameter", "Bad Request", HttpStatus.BAD_REQUEST.value());
+            throw new SystemException(String.format("Invalid userId parameter %s", userId), "Bad Request",
+                HttpStatus.BAD_REQUEST.value());
         }
 
         return auditionPosts.stream().filter(post -> post.getUserId() == userIdInt).toList();
@@ -54,7 +55,8 @@ public class AuditionController {
         try {
             postIdInt = Integer.parseInt(postId);
         } catch (NumberFormatException e) {
-            throw new SystemException("Invalid postId parameter", "Bad Request", HttpStatus.BAD_REQUEST.value());
+            throw new SystemException(String.format("Invalid postId parameter %s", postId), "Bad Request",
+                HttpStatus.BAD_REQUEST.value());
         }
 
         return auditionService.getPostById(postIdInt);
