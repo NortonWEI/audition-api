@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
@@ -15,6 +16,8 @@ import org.springframework.util.StreamUtils;
 @Component
 public class LoggingInterceptor implements ClientHttpRequestInterceptor {
 
+    private static final String TRACE_ID_KEY = "traceId";
+    private static final String SPAN_ID_KEY = "spanId";
     private static final Logger LOGGER = LoggerFactory.getLogger(LoggingInterceptor.class);
     private final AuditionLogger auditionLogger;
 
@@ -28,7 +31,9 @@ public class LoggingInterceptor implements ClientHttpRequestInterceptor {
         throws IOException {
         logRequest(request, body);
         ClientHttpResponse response = execution.execute(request, body);
+        setTracingHeaders(response);
         logResponse(response);
+        cleanTracingHeaders();
 
         return response;
     }
@@ -61,5 +66,21 @@ public class LoggingInterceptor implements ClientHttpRequestInterceptor {
             // Catch any exception during logging to avoid affecting the main flow
             auditionLogger.logErrorWithException(LOGGER, "Failed to log response", e);
         }
+    }
+
+    private void setTracingHeaders(ClientHttpResponse response) {
+        String traceId = MDC.get("traceId");
+        String spanId = MDC.get("spanId");
+        if (StringUtils.isNotEmpty(traceId)) {
+            response.getHeaders().set("X-Trace-Id", traceId);
+        }
+        if (StringUtils.isNotEmpty(spanId)) {
+            response.getHeaders().set("X-Span-Id", spanId);
+        }
+    }
+
+    private void cleanTracingHeaders() {
+        MDC.remove(TRACE_ID_KEY);
+        MDC.remove(SPAN_ID_KEY);
     }
 }
