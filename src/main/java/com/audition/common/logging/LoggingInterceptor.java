@@ -16,8 +16,6 @@ import org.springframework.util.StreamUtils;
 @Component
 public class LoggingInterceptor implements ClientHttpRequestInterceptor {
 
-    private static final String TRACE_ID_KEY = "traceId";
-    private static final String SPAN_ID_KEY = "spanId";
     private static final Logger LOGGER = LoggerFactory.getLogger(LoggingInterceptor.class);
     private final AuditionLogger auditionLogger;
 
@@ -33,7 +31,6 @@ public class LoggingInterceptor implements ClientHttpRequestInterceptor {
         ClientHttpResponse response = execution.execute(request, body);
         setTracingHeaders(response);
         logResponse(response);
-        cleanTracingHeaders();
 
         return response;
     }
@@ -77,10 +74,5 @@ public class LoggingInterceptor implements ClientHttpRequestInterceptor {
         if (StringUtils.isNotEmpty(spanId)) {
             response.getHeaders().set("X-Span-Id", spanId);
         }
-    }
-
-    private void cleanTracingHeaders() {
-        MDC.remove(TRACE_ID_KEY);
-        MDC.remove(SPAN_ID_KEY);
     }
 }
