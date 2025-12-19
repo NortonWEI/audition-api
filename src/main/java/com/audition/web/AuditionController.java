@@ -29,7 +29,7 @@ public class AuditionController {
         // Add logic that filters response data based on the query param.
         // Currently, the userId filter has been added.
         // More filters like title/body filtering can be added as needed later.
-        // Paging can also be added as needed later.
+        // Paging and sorting can also be added as needed later.
         final List<AuditionPost> auditionPosts = auditionService.getPosts();
 
         // input validation
