@@ -34,6 +34,7 @@ ext {
     set('springCloudVersion', "2022.0.1")
     set('springdocVersion', "2.0.2")
     set('otelVersion', "1.57.0")
+    set('assertjVersion', "3.27.6")
 }
 
 dependencies {
@@ -76,6 +77,7 @@ dependencies {
     implementation "io.opentelemetry:opentelemetry-api:${otelVersion}"
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.assertj:assertj-core:${assertjVersion}"
 
     // WebFlux dependencies are removed since we don't use reactive response in this project atm.
 //    testImplementation "io.projectreactor:reactor-test"
