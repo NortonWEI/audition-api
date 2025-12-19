@@ -1,15 +1,12 @@
 package com.audition.web;
 
 import com.audition.common.exception.SystemException;
-import com.audition.common.logging.AuditionLogger;
 import com.audition.model.AuditionComment;
 import com.audition.model.AuditionPost;
 import com.audition.service.AuditionService;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,15 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AuditionController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AuditionController.class);
-    private final AuditionLogger auditionLogger;
-
     @Autowired
     AuditionService auditionService;
-
-    public AuditionController(AuditionLogger auditionLogger) {
-        this.auditionLogger = auditionLogger;
-    }
 
     // Add a query param that allows data filtering. The intent of the filter is at developers discretion.
     @RequestMapping(value = "/posts", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -51,7 +41,6 @@ public class AuditionController {
         try {
             userIdInt = Integer.parseInt(userId);
         } catch (NumberFormatException e) {
-            auditionLogger.logErrorWithException(LOGGER, String.format("Invalid userId parameter: %s", userId), e);
             throw new SystemException("Invalid userId parameter", "Bad Request", HttpStatus.BAD_REQUEST.value());
         }
 
@@ -65,7 +54,6 @@ public class AuditionController {
         try {
             postIdInt = Integer.parseInt(postId);
         } catch (NumberFormatException e) {
-            auditionLogger.logErrorWithException(LOGGER, String.format("Invalid postId: %s", postId), e);
             throw new SystemException("Invalid postId parameter", "Bad Request", HttpStatus.BAD_REQUEST.value());
         }
 

@@ -1,12 +1,9 @@
 package com.audition.integration;
 
 import com.audition.common.exception.SystemException;
-import com.audition.common.logging.AuditionLogger;
 import com.audition.model.AuditionPost;
 import java.net.URI;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -17,16 +14,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Component
 public class AuditionIntegrationClient {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AuditionIntegrationClient.class);
     private static final String BASE_URL = "https://jsonplaceholder.typicode.com/posts";
-    private final AuditionLogger auditionLogger;
 
     @Autowired
     private RestTemplate restTemplate;
-
-    public AuditionIntegrationClient(AuditionLogger auditionLogger) {
-        this.auditionLogger = auditionLogger;
-    }
 
     public List<AuditionPost> getPosts() {
         // make RestTemplate call to get Posts from https://jsonplaceholder.typicode.com/posts
@@ -34,8 +25,6 @@ public class AuditionIntegrationClient {
             AuditionPost[] posts = restTemplate.getForObject(BASE_URL, AuditionPost[].class);
             return posts == null ? List.of() : List.of(posts);
         } catch (final HttpClientErrorException e) {
-            auditionLogger.logErrorWithException(LOGGER,
-                String.format("Error occurred while fetching posts: %s", e.getMessage()), e);
             throw new SystemException(String.format("Error occurred while fetching posts: %s", e.getMessage()),
                 "Integration Error", e.getStatusCode().value());
         }
@@ -49,14 +38,11 @@ public class AuditionIntegrationClient {
             return post == null ? new AuditionPost() : post;
         } catch (final HttpClientErrorException e) {
             if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
-                auditionLogger.logErrorWithException(LOGGER,
-                    String.format("Post with id %d not found: %s", id, e.getMessage()), e);
                 throw new SystemException("Cannot find a Post with id " + id, "Resource Not Found",
                     404);
             } else {
-                // Find a better way to handle the exception so that the original error message is not lost. Feel free to change this function.
-                auditionLogger.logErrorWithException(LOGGER,
-                    String.format("Error occurred while fetching post with id %d: %s", id, e.getMessage()), e);
+                // Find a better way to handle the exception so that the original error message is not lost.
+                // Feel free to change this function.
                 throw new SystemException(
                     String.format("Error occurred while fetching post with id %d: %s", id, e.getMessage()),
                     "Integration Error", e.getStatusCode().value());
