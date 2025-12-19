@@ -33,7 +33,7 @@ public class ResponseHeaderInjector extends OncePerRequestFilter {
         try {
             Span currentSpan = Span.current();
             SpanContext ctxSpan = currentSpan.getSpanContext();
-            if (ctxSpan != null) {
+            if (ctxSpan != null && ctxSpan.isValid()) {
                 response.setHeader("X-Trace-Id", ctxSpan.getTraceId());
                 response.setHeader("X-Span-Id", ctxSpan.getSpanId());
 
