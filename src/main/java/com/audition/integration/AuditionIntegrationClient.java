@@ -1,6 +1,7 @@
 package com.audition.integration;
 
 import com.audition.common.exception.SystemException;
+import com.audition.model.AuditionComment;
 import com.audition.model.AuditionPost;
 import java.net.URI;
 import java.util.List;
@@ -50,8 +51,34 @@ public class AuditionIntegrationClient {
         }
     }
 
-    // TODO Write a method GET comments for a post from https://jsonplaceholder.typicode.com/posts/{postId}/comments - the comments must be returned as part of the post.
+    // Write a method GET comments for a post from https://jsonplaceholder.typicode.com/posts/{postId}/comments - the comments must be returned as part of the post.
+    public AuditionPost getPostWithCommentsByPostId(final int id) {
+        AuditionPost post = getPostById(id);
+        List<AuditionComment> comments = getCommentsByPostId(id);
+        post.setComments(comments);
 
-    // TODO write a method. GET comments for a particular Post from https://jsonplaceholder.typicode.com/comments?postId={postId}.
+        return post;
+    }
+
+    // write a method. GET comments for a particular Post from https://jsonplaceholder.typicode.com/comments?postId={postId}.
     // The comments are a separate list that needs to be returned to the API consumers. Hint: this is not part of the AuditionPost pojo.
+    public List<AuditionComment> getCommentsByPostId(final int id) {
+        try {
+            URI url = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/{id}/comments")
+                .buildAndExpand(id)
+                .encode()
+                .toUri();
+            AuditionComment[] comments = restTemplate.getForObject(url, AuditionComment[].class);
+            return comments == null ? List.of() : List.of(comments);
+        } catch (final HttpClientErrorException e) {
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                throw new SystemException("Cannot find a Post with id " + id, "Resource Not Found",
+                    404);
+            } else {
+                throw new SystemException(
+                    String.format("Error occurred while fetching comments for post with id %d: %s", id, e.getMessage()),
+                    "Integration Error", e.getStatusCode().value());
+            }
+        }
+    }
 }

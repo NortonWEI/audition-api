@@ -4,7 +4,6 @@ import com.audition.common.exception.SystemException;
 import com.audition.model.AuditionComment;
 import com.audition.model.AuditionPost;
 import com.audition.service.AuditionService;
-import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,20 +50,31 @@ public class AuditionController {
     @RequestMapping(value = "/posts/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody AuditionPost getPostById(@PathVariable("id") final String postId) {
         // input validation
-        final int postIdInt;
-        try {
-            postIdInt = Integer.parseInt(postId);
-        } catch (NumberFormatException e) {
-            throw new SystemException(String.format("Invalid postId parameter %s", postId), "Bad Request",
-                HttpStatus.BAD_REQUEST.value());
-        }
+        final int postIdInt = getIntegerId(postId);
 
         return auditionService.getPostById(postIdInt);
     }
 
-    // TODO Add additional methods to return comments for each post. Hint: Check https://jsonplaceholder.typicode.com/
+    // Add additional methods to return comments for each post. Hint: Check https://jsonplaceholder.typicode.com/
     @RequestMapping(value = "/posts/{id}/comments", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody List<AuditionComment> getCommentsForPost(@PathVariable("id") final String postId) {
-        return new ArrayList<>();
+        // input validation
+        final int postIdInt = getIntegerId(postId);
+
+        // assume the comments are returned separately from posts
+        // alternatively, comments can be part of the AuditionPost object,
+        // using auditionService.getPostWithCommentsById(postIdInt);
+        return auditionService.getCommentsByPostId(postIdInt);
+    }
+
+    private static int getIntegerId(String postId) {
+        final int idInt;
+        try {
+            idInt = Integer.parseInt(postId);
+        } catch (NumberFormatException e) {
+            throw new SystemException(String.format("Invalid postId parameter %s", postId), "Bad Request",
+                HttpStatus.BAD_REQUEST.value());
+        }
+        return idInt;
     }
 }
