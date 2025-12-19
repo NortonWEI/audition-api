@@ -19,7 +19,7 @@ public class SecurityConfiguration {
     private static final String ACTUATOR_ROLE = "ACTUATOR";
 
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(
                 auth -> auth.requestMatchers(

@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuditionController {
 
     @Autowired
-    AuditionService auditionService;
+    transient AuditionService auditionService;
 
     // Add a query param that allows data filtering. The intent of the filter is at developers discretion.
     @RequestMapping(value = "/posts", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -67,7 +67,7 @@ public class AuditionController {
         return auditionService.getCommentsByPostId(postIdInt);
     }
 
-    private static int getIntegerId(String postId) {
+    private static int getIntegerId(final String postId) {
         final int idInt;
         try {
             idInt = Integer.parseInt(postId);

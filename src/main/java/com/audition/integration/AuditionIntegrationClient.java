@@ -18,12 +18,12 @@ public class AuditionIntegrationClient {
     private static final String BASE_URL = "https://jsonplaceholder.typicode.com/posts";
 
     @Autowired
-    private RestTemplate restTemplate;
+    private transient RestTemplate restTemplate;
 
     public List<AuditionPost> getPosts() {
         // make RestTemplate call to get Posts from https://jsonplaceholder.typicode.com/posts
         try {
-            AuditionPost[] posts = restTemplate.getForObject(BASE_URL, AuditionPost[].class);
+            final AuditionPost[] posts = restTemplate.getForObject(BASE_URL, AuditionPost[].class);
             return posts == null ? List.of() : List.of(posts);
         } catch (final HttpClientErrorException e) {
             throw new SystemException(String.format("Error occurred while fetching posts: %s", e.getMessage()),
@@ -34,8 +34,8 @@ public class AuditionIntegrationClient {
     public AuditionPost getPostById(final int id) {
         // get post by post ID call from https://jsonplaceholder.typicode.com/posts/
         try {
-            URI url = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/{id}").buildAndExpand(id).encode().toUri();
-            AuditionPost post = restTemplate.getForObject(url, AuditionPost.class);
+            final URI url = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/{id}").buildAndExpand(id).encode().toUri();
+            final AuditionPost post = restTemplate.getForObject(url, AuditionPost.class);
             return post == null ? new AuditionPost() : post;
         } catch (final HttpClientErrorException e) {
             if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
@@ -53,8 +53,8 @@ public class AuditionIntegrationClient {
 
     // Write a method GET comments for a post from https://jsonplaceholder.typicode.com/posts/{postId}/comments - the comments must be returned as part of the post.
     public AuditionPost getPostWithCommentsByPostId(final int id) {
-        AuditionPost post = getPostById(id);
-        List<AuditionComment> comments = getCommentsByPostId(id);
+        final AuditionPost post = getPostById(id);
+        final List<AuditionComment> comments = getCommentsByPostId(id);
         post.setComments(comments);
 
         return post;
@@ -64,11 +64,11 @@ public class AuditionIntegrationClient {
     // The comments are a separate list that needs to be returned to the API consumers. Hint: this is not part of the AuditionPost pojo.
     public List<AuditionComment> getCommentsByPostId(final int id) {
         try {
-            URI url = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/{id}/comments")
+            final URI url = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/{id}/comments")
                 .buildAndExpand(id)
                 .encode()
                 .toUri();
-            AuditionComment[] comments = restTemplate.getForObject(url, AuditionComment[].class);
+            final AuditionComment[] comments = restTemplate.getForObject(url, AuditionComment[].class);
             return comments == null ? List.of() : List.of(comments);
         } catch (final HttpClientErrorException e) {
             if (e.getStatusCode() == HttpStatus.NOT_FOUND) {

@@ -17,29 +17,29 @@ import org.springframework.util.StreamUtils;
 public class LoggingInterceptor implements ClientHttpRequestInterceptor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoggingInterceptor.class);
-    private final AuditionLogger auditionLogger;
+    private transient final AuditionLogger auditionLogger;
 
-    public LoggingInterceptor(AuditionLogger auditionLogger) {
+    public LoggingInterceptor(final AuditionLogger auditionLogger) {
         this.auditionLogger = auditionLogger;
     }
 
     @Override
-    public ClientHttpResponse intercept(HttpRequest request, byte[] body,
-        ClientHttpRequestExecution execution)
+    public ClientHttpResponse intercept(final HttpRequest request, final byte[] body,
+        final ClientHttpRequestExecution execution)
         throws IOException {
         logRequest(request, body);
-        ClientHttpResponse response = execution.execute(request, body);
+        final ClientHttpResponse response = execution.execute(request, body);
         setTracingHeaders(response);
         logResponse(response);
 
         return response;
     }
 
-    private void logRequest(HttpRequest request, byte[] body) {
+    private void logRequest(final HttpRequest request, final byte[] body) {
         try {
-            String reqBodyString =
+            final String reqBodyString =
                 body != null && body.length > 0 ? new String(body, StandardCharsets.UTF_8) : StringUtils.EMPTY;
-            String logMessage = String.format(
+            final String logMessage = String.format(
                 "Request ==> %nMethod: %s, %nURI: %s, %nHeaders: %s, %nBody: %s",
                 request.getMethod(), request.getURI(), request.getHeaders(), reqBodyString);
             auditionLogger.info(LOGGER, logMessage);
@@ -49,13 +49,13 @@ public class LoggingInterceptor implements ClientHttpRequestInterceptor {
         }
     }
 
-    private void logResponse(ClientHttpResponse response) {
+    private void logResponse(final ClientHttpResponse response) {
         try {
             // copy response body to allow reading it without consuming the stream
-            byte[] resBody = StreamUtils.copyToByteArray(response.getBody());
-            String resBodyString =
+            final byte[] resBody = StreamUtils.copyToByteArray(response.getBody());
+            final String resBodyString =
                 resBody.length > 0 ? new String(resBody, StandardCharsets.UTF_8) : StringUtils.EMPTY;
-            String logMessage = String.format(
+            final String logMessage = String.format(
                 "Response <== %nStatus Code: %s, %nHeaders: %s, %nBody: %s",
                 response.getStatusCode(), response.getHeaders(), resBodyString);
             auditionLogger.info(LOGGER, logMessage);
@@ -65,9 +65,9 @@ public class LoggingInterceptor implements ClientHttpRequestInterceptor {
         }
     }
 
-    private void setTracingHeaders(ClientHttpResponse response) {
-        String traceId = MDC.get("traceId");
-        String spanId = MDC.get("spanId");
+    private void setTracingHeaders(final ClientHttpResponse response) {
+        final String traceId = MDC.get("traceId");
+        final String spanId = MDC.get("spanId");
         if (StringUtils.isNotEmpty(traceId)) {
             response.getHeaders().set("X-Trace-Id", traceId);
         }

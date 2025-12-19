@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.Locale;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
@@ -27,17 +28,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebServiceConfiguration implements WebMvcConfigurer {
 
     private static final String YEAR_MONTH_DAY_PATTERN = "yyyy-MM-dd";
-    private final LoggingInterceptor loggingInterceptor;
+    private transient final LoggingInterceptor loggingInterceptor;
 
-    public WebServiceConfiguration(LoggingInterceptor loggingInterceptor) {
+    public WebServiceConfiguration(final LoggingInterceptor loggingInterceptor) {
         this.loggingInterceptor = loggingInterceptor;
     }
 
     @Bean
     public ObjectMapper objectMapper() {
-        ObjectMapper mapper = new ObjectMapper();
+        final ObjectMapper mapper = new ObjectMapper();
         // 1. allows for date format as yyyy-MM-dd
-        mapper.setDateFormat(new SimpleDateFormat(YEAR_MONTH_DAY_PATTERN));
+        mapper.setDateFormat(new SimpleDateFormat(YEAR_MONTH_DAY_PATTERN, Locale.ROOT));
         mapper.registerModule(getTimeModule());
         // 2. Does not fail on unknown properties
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -53,8 +54,8 @@ public class WebServiceConfiguration implements WebMvcConfigurer {
     }
 
     private Module getTimeModule() {
-        JavaTimeModule timeModule = new JavaTimeModule();
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(YEAR_MONTH_DAY_PATTERN);
+        final JavaTimeModule timeModule = new JavaTimeModule();
+        final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(YEAR_MONTH_DAY_PATTERN);
         timeModule.addSerializer(LocalDate.class, new LocalDateSerializer(dateFormatter));
         timeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(dateFormatter));
 
@@ -62,7 +63,7 @@ public class WebServiceConfiguration implements WebMvcConfigurer {
     }
 
     @Bean
-    public RestTemplate restTemplate(ObjectMapper objectMapper) {
+    public RestTemplate restTemplate(final ObjectMapper objectMapper) {
         final RestTemplate restTemplate = new RestTemplate(
             new BufferingClientHttpRequestFactory(createClientFactory()));
         // remove duplicate message converters if any
