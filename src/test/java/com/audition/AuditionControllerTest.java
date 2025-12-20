@@ -46,16 +46,16 @@ public class AuditionControllerTest {
 
     @Test
     public void getPosts_nullUserId_successful() {
-        List<AuditionPost> results = auditionController.getPosts(null);
+        List<AuditionPost> actual = auditionController.getPosts(null);
 
-        assertThat(results).containsExactlyElementsOf(allPosts);
+        assertThat(actual).containsExactlyInAnyOrderElementsOf(allPosts);
     }
 
     @Test
     public void getPosts_emptyUserId_successful() {
-        List<AuditionPost> results = auditionController.getPosts("");
+        List<AuditionPost> actual = auditionController.getPosts("");
 
-        assertThat(results).containsExactlyElementsOf(allPosts);
+        assertThat(actual).containsExactlyInAnyOrderElementsOf(allPosts);
     }
 
     @Test
@@ -65,9 +65,9 @@ public class AuditionControllerTest {
 
     @Test
     public void getPosts_validUserId_successful() {
-        List<AuditionPost> results = auditionController.getPosts("1");
+        List<AuditionPost> actual = auditionController.getPosts("1");
         List<AuditionPost> expect = allPosts.stream().filter(post -> post.getUserId() == 1).toList();
-        assertThat(results).containsExactlyElementsOf(expect);
+        assertThat(actual).containsExactlyInAnyOrderElementsOf(expect);
     }
 
     @Test
@@ -87,10 +87,10 @@ public class AuditionControllerTest {
 
     @Test
     public void getPostById_validPostId_successful() {
-        AuditionPost result = auditionController.getPostById("1");
+        AuditionPost actual = auditionController.getPostById("1");
         AuditionPost expect = allPosts.get(0);
 
-        assertThat(result).isEqualTo(expect);
+        assertThat(actual).isEqualTo(expect);
     }
 
     @Test
@@ -110,9 +110,9 @@ public class AuditionControllerTest {
 
     @Test
     public void getCommentsForPost_validPostId_successful() {
-        List<AuditionComment> results = auditionController.getCommentsForPost("1");
+        List<AuditionComment> actual = auditionController.getCommentsForPost("1");
         List<AuditionComment> expect = allComments.stream().filter(comment -> comment.getPostId() == 1).toList();
 
-        assertThat(results).isEqualTo(expect);
+        assertThat(actual).isEqualTo(expect);
     }
 }

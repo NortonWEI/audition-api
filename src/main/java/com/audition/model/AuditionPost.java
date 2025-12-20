@@ -1,6 +1,7 @@
 package com.audition.model;
 
 import java.util.List;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,4 +19,18 @@ public class AuditionPost {
     private String body;
     private List<AuditionComment> comments;
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        AuditionPost that = (AuditionPost) o;
+        return userId == that.userId && id == that.id && Objects.equals(title, that.title)
+            && Objects.equals(body, that.body) && Objects.equals(comments, that.comments);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, id, title, body, comments);
+    }
 }
