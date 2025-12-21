@@ -1,4 +1,4 @@
-package com.audition;
+package com.audition.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
 import com.audition.common.exception.SystemException;
-import com.audition.integration.AuditionIntegrationClient;
 import com.audition.model.AuditionComment;
 import com.audition.model.AuditionPost;
 import java.net.URI;
@@ -176,5 +175,4 @@ public class AuditionIntegrationClientTest {
         AuditionPost actual = client.getPostWithCommentsByPostId(1);
         assertThat(actual).isEqualTo(expect);
     }
-
 }

@@ -17,5 +17,4 @@ class AuditionApplicationTests {
         ApplicationContext ctx = SpringApplication.run(AuditionApplication.class, new String[]{});
         assertNotNull(ctx);
     }
-
 }

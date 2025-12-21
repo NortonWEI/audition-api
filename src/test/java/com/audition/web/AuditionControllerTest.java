@@ -1,4 +1,4 @@
-package com.audition;
+package com.audition.web;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -9,7 +9,6 @@ import com.audition.common.exception.SystemException;
 import com.audition.integration.AuditionIntegrationClient;
 import com.audition.model.AuditionComment;
 import com.audition.model.AuditionPost;
-import com.audition.web.AuditionController;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
