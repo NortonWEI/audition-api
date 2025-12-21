@@ -3,9 +3,13 @@ package com.audition.model;
 import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class AuditionComment {
 
     private int postId;
