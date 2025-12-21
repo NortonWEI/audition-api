@@ -35,6 +35,7 @@ ext {
     set('springdocVersion', "2.0.2")
     set('otelVersion', "1.57.0")
     set('assertjVersion', "3.27.6")
+    set('mockitoVersion', "4.8.1")
 }
 
 dependencies {
@@ -78,6 +79,7 @@ dependencies {
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
     testImplementation "org.assertj:assertj-core:${assertjVersion}"
+    testImplementation "org.mockito:mockito-inline:${mockitoVersion}"
 
     // WebFlux dependencies are removed since we don't use reactive response in this project atm.
 //    testImplementation "io.projectreactor:reactor-test"
