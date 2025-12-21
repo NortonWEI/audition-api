@@ -68,7 +68,7 @@ public class ResponseHeaderInjectorTest {
     }
 
     @Test
-    void shouldLogAndProceed_whenSpanCurrentThrows() throws Exception {
+    void doFilterInternal_exception_failed() throws Exception {
         try (MockedStatic<Span> spanStatic = mockStatic(Span.class)) {
             final RuntimeException exception = new RuntimeException("otel error");
             spanStatic.when(Span::current).thenThrow(exception);
