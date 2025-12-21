@@ -15,11 +15,11 @@ public class AuditionComment {
     private String body;
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        AuditionComment that = (AuditionComment) o;
+        final AuditionComment that = (AuditionComment) o;
         return postId == that.postId && id == that.id && Objects.equals(name, that.name)
             && Objects.equals(email, that.email) && Objects.equals(body, that.body);
     }

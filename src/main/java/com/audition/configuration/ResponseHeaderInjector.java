@@ -21,7 +21,7 @@ public class ResponseHeaderInjector extends OncePerRequestFilter {
     private static final Logger LOGGER = LoggerFactory.getLogger(ResponseHeaderInjector.class);
     private static final String TRACE_ID_KEY = "traceId";
     private static final String SPAN_ID_KEY = "spanId";
-    private transient final AuditionLogger auditionLogger;
+    private final transient AuditionLogger auditionLogger;
 
     public ResponseHeaderInjector(final AuditionLogger auditionLogger) {
         super();
@@ -30,8 +30,7 @@ public class ResponseHeaderInjector extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response,
-        final FilterChain filterChain)
-        throws ServletException, IOException {
+        final FilterChain filterChain) throws ServletException, IOException {
         try {
             final Span currentSpan = Span.current();
             final SpanContext ctxSpan = currentSpan.getSpanContext();

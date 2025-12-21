@@ -20,11 +20,11 @@ public class AuditionPost {
     private List<AuditionComment> comments;
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        AuditionPost that = (AuditionPost) o;
+        final AuditionPost that = (AuditionPost) o;
         return userId == that.userId && id == that.id && Objects.equals(title, that.title)
             && Objects.equals(body, that.body) && Objects.equals(comments, that.comments);
     }

@@ -17,7 +17,7 @@ import org.springframework.util.StreamUtils;
 public class LoggingInterceptor implements ClientHttpRequestInterceptor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoggingInterceptor.class);
-    private transient final AuditionLogger auditionLogger;
+    private final transient AuditionLogger auditionLogger;
 
     public LoggingInterceptor(final AuditionLogger auditionLogger) {
         this.auditionLogger = auditionLogger;

@@ -28,7 +28,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebServiceConfiguration implements WebMvcConfigurer {
 
     private static final String YEAR_MONTH_DAY_PATTERN = "yyyy-MM-dd";
-    private transient final LoggingInterceptor loggingInterceptor;
+    private final transient LoggingInterceptor loggingInterceptor;
 
     public WebServiceConfiguration(final LoggingInterceptor loggingInterceptor) {
         this.loggingInterceptor = loggingInterceptor;
